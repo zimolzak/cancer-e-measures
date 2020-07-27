@@ -225,3 +225,191 @@ FROM [ORD_Singh_202001030D].[Src].[Oncology_Oncology_Primary_165_5]
 		and not HistologyIcdo3X like 'small%' and not HistologyIcdo3X  like 'carcinoid%' and not HistologyIcdo3X  like 'neuro%'	
 		and (Stagegroupingajcc = 'III' or Stagegroupingajcc = 'IV')
 --22873
+
+
+
+-------- COLON --------
+
+SELECT TOP (200) 
+[patientsid],[Sta3n],[Stagegroupclinical] ,[StageGroupingajcc] ,[SitegpX],[ICDOSite],[PrimarysiteX],[Histologyicdo3X] -- last good one?
+      ,[DateDX],[Histologyicdo2X],[SeerSummaryStage2000]
+  FROM [ORD_Singh_202001030D].[Src].[Oncology_Oncology_Primary_165_5]
+  where (SitegpX like 'colo%' or ICDOSite like 'colo%' or PrimarysiteX like 'colo%')
+	--and not HistologyIcdo3X like 'small%' and not HistologyIcdo3X  like 'carcinoid%' and not HistologyIcdo3X  like 'neuro%'
+
+select count(*) as n, [Histologyicdo3X]
+from [ORD_Singh_202001030D].[Src].[Oncology_Oncology_Primary_165_5]
+where (SitegpX like 'colo%' or ICDOSite like 'colo%' or PrimarysiteX like 'colo%')
+group by Histologyicdo3X
+order by n desc
+-- 128 rows
+/*
+23383	ADENOCARCINOMA, NOS
+1869	MUCINOUS ADENOCARCINOMA
+1784	ADENOCARCINOMA ADENOMATOUS IN POLYP
+1763	ADENOCARCINOMA IN TUBULOVILLOUS ADENOMA
+1192	ADENOCA IN SITU IN TUBULOVILLOUS ADENOMA
+1127	ADENOCARCINOMA IN SITU IN ADENOMATOUS POLYP
+840	ADENOCARCINOMA IN SITU, NOS
+806	CARCINOMA IN SITU, NOS
+458	CARCINOID TUMOR, NOS
+420	ADENOCARCINOMA IN VILLOUS ADENOMA
+369	NULL
+336	CARCINOMA, NOS
+271	MUCIN-PRODUCING ADENOCARCINOMA
+260	SIGNET RING CELL CARCINOMA
+242	NEOPLASM, MALIGNANT
+218	ADENOCARCINOMA IN SITU IN VILLOUS ADENOMA
+211	NEUROENDOCRINE CARCINOMA, NOS
+89	ATYPICAL ADENOMA
+88	GOBLET CELL CARCINOID
+79	MALIGNANT LYMPHOMA, LRGE B-CELL, DIFFUSE, NOS
+57	CARCINOID TUMOR OF UNCERTAIN MALIG POTENTIAL
+52	MANTLE CELL LYMPHOMA
+46	ADENOCARCINOMA WITH MIXED SUBTYPES
+45	MARGINAL ZONE B-CELL LYMPHOMA, NOS
+39	MEDULLARY CARCINOMA, NOS                    ***  1%
+33	TUBULAR ADENOCARCINOMA IN SITU              ***  <1%
+32	VILLOUS ADENOMA, NOS
+32	TUMOR CELLS, MALIGNANT
+31	TUBULAR ADENOCARCINOMA
+28	COMPOSITE CARCINOID
+28	GASTROINTESTINAL STROMAL SARCOMA
+28	ADENOMA, NOS
+*/
+
+
+
+-- bad ones:
+
+/*
+458	CARCINOID TUMOR, NOS
+211	NEUROENDOCRINE CARCINOMA, NOS
+89	ATYPICAL ADENOMA
+88	GOBLET CELL CARCINOID
+79	MALIGNANT LYMPHOMA, LRGE B-CELL, DIFFUSE, NOS
+57	CARCINOID TUMOR OF UNCERTAIN MALIG POTENTIAL
+52	MANTLE CELL LYMPHOMA
+45	MARGINAL ZONE B-CELL LYMPHOMA, NOS
+32	VILLOUS ADENOMA, NOS
+28	COMPOSITE CARCINOID
+28	GASTROINTESTINAL STROMAL SARCOMA
+28	ADENOMA, NOS
+*/
+
+
+--false pos examples
+SELECT TOP (200) 
+[patientsid],[Sta3n],[Stagegroupclinical] ,[StageGroupingajcc] ,[SitegpX],[ICDOSite],[PrimarysiteX],[Histologyicdo3X] -- last good one?
+      ,[DateDX],[Histologyicdo2X],[SeerSummaryStage2000]
+  FROM [ORD_Singh_202001030D].[Src].[Oncology_Oncology_Primary_165_5]
+  where (SitegpX like 'colo%' or ICDOSite like 'colo%' or PrimarysiteX like 'colo%')
+  and Histologyicdo3X like 'carcinoid%'
+
+
+SELECT count(*)
+  FROM [ORD_Singh_202001030D].[Src].[Oncology_Oncology_Primary_165_5]
+  where (SitegpX like 'colo%' or ICDOSite like 'colo%' or PrimarysiteX like 'colo%')
+--36705
+
+SELECT count(*)
+  FROM [ORD_Singh_202001030D].[Src].[Oncology_Oncology_Primary_165_5]
+  where (SitegpX like 'colo%' or ICDOSite like 'colo%' or PrimarysiteX like 'colo%')
+  and not (Histologyicdo3X like 'carcinoid%' or 
+  Histologyicdo3X like 'neuro%' or 
+  Histologyicdo3X like 'atypical adenom%' or 
+  Histologyicdo3X like 'goblet cell carcinoi%' or 
+  Histologyicdo3X like 'malignant lymp%' or 
+  Histologyicdo3X like 'mantle%' or 
+  Histologyicdo3X like 'marginal%' or 
+  Histologyicdo3X like 'villous adenom%' or 
+  Histologyicdo3X like 'composite carcinoi%' or 
+  Histologyicdo3X like 'gastrointestinal strom%' or 
+  Histologyicdo3X like 'adenoma%')
+  --35089
+
+select count(*) as n, [Histologyicdo3X]
+  FROM [ORD_Singh_202001030D].[Src].[Oncology_Oncology_Primary_165_5]
+  where (SitegpX like 'colo%' or ICDOSite like 'colo%' or PrimarysiteX like 'colo%')
+  and not (Histologyicdo3X like 'carcinoid%' or 
+  Histologyicdo3X like 'neuro%' or 
+  Histologyicdo3X like 'atypical adenom%' or 
+  Histologyicdo3X like 'goblet cell carcinoi%' or 
+  Histologyicdo3X like 'malignant lymp%' or 
+  Histologyicdo3X like 'mantle%' or 
+  Histologyicdo3X like 'marginal%' or 
+  Histologyicdo3X like 'villous adenom%' or 
+  Histologyicdo3X like 'composite carcinoi%' or 
+  Histologyicdo3X like 'gastrointestinal strom%' or 
+  Histologyicdo3X like 'adenoma%')
+group by Histologyicdo3X
+order by n desc
+-- 104 rows
+/*
+
+*/
+
+
+
+-- double percent
+select count(*) as n, [Histologyicdo3X]
+  FROM [ORD_Singh_202001030D].[Src].[Oncology_Oncology_Primary_165_5]
+  where (SitegpX like 'colo%' or ICDOSite like 'colo%' or PrimarysiteX like 'colo%')
+  and not (Histologyicdo3X like '%carcinoid%' or 
+  Histologyicdo3X like '%neuro%' or 
+  Histologyicdo3X like '%adenoma%' or 
+  Histologyicdo3X like '%lymph%' or 
+  Histologyicdo3X like 'gastrointestinal strom%' or
+  Histologyicdo3X like '%sarcoma%')
+group by Histologyicdo3X
+order by n desc
+-- 66 rows, performs OK. 
+
+
+
+
+
+
+
+
+
+
+/* DONE REFINING WHERE CLAUSE */
+
+
+select TOP (200) 
+[patientsid],[Sta3n],[Stagegroupclinical] ,[StageGroupingajcc] ,[SitegpX],[ICDOSite],[PrimarysiteX],[Histologyicdo3X] -- last good one?
+      ,[DateDX],[Histologyicdo2X],[SeerSummaryStage2000]
+  FROM [ORD_Singh_202001030D].[Src].[Oncology_Oncology_Primary_165_5]
+  where (SitegpX like 'colo%' or ICDOSite like 'colo%' or PrimarysiteX like 'colo%')
+  and not (Histologyicdo3X like '%carcinoid%' or 
+  Histologyicdo3X like '%neuro%' or 
+  Histologyicdo3X like '%adenoma%' or 
+  Histologyicdo3X like '%lymph%' or 
+  Histologyicdo3X like 'gastrointestinal strom%' or
+  Histologyicdo3X like '%sarcoma%')
+
+select count(*) as n, [StageGroupingajcc] 
+  FROM [ORD_Singh_202001030D].[Src].[Oncology_Oncology_Primary_165_5]
+  where (SitegpX like 'colo%' or ICDOSite like 'colo%' or PrimarysiteX like 'colo%')
+  and not (Histologyicdo3X like '%carcinoid%' or 
+  Histologyicdo3X like '%neuro%' or 
+  Histologyicdo3X like '%adenoma%' or 
+  Histologyicdo3X like '%lymph%' or 
+  Histologyicdo3X like 'gastrointestinal strom%' or
+  Histologyicdo3X like '%sarcoma%')
+group by StageGroupingajcc
+order by n desc
+
+/*
+n	StageGroupingajcc
+6781	II
+6699	I
+5897	III
+2790	IV
+2469	NULL
+1999	Unk/Uns
+1738	0
+28	NA
+*/
+
