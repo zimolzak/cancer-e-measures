@@ -541,3 +541,69 @@ where SitegpX like 'lung%'
 -- 60.9%
 -- Bear in mind, this is anyone with ONE OR MORE visit for lung cancer, using OUTPATIENT VISITS ONLY.
 -- Not even the stringent criterion of TWO OR MORE visits with ICD tag for lung cancer.
+
+
+
+
+
+
+
+
+
+
+
+
+/******** LUNG NULL/UNK STAGE ********/
+
+SELECT TOP (200) 
+[patientsid],[StageGroupingajcc],[DateDX],    [Sta3n],[Stagegroupclinical] ,[SitegpX],[ICDOSite],[PrimarysiteX],[Histologyicdo3X]
+FROM [ORD_Singh_202001030D].[Src].[Oncology_Oncology_Primary_165_5]
+		where (SitegpX like 'lung%' or ICDOSite like 'lung%' or PrimarysiteX like 'lung%')
+		and not HistologyIcdo3X like 'small%' and not HistologyIcdo3X  like 'carcinoid%' and not HistologyIcdo3X  like 'neuro%'	
+		and not HistologyIcdo3X like 'lymph%' 
+		and (StageGroupingajcc like 'Unk%' or StageGroupingajcc like 'NA%' or StageGroupingajcc is null)
+
+-- TODO : exclude lymphoma above.
+-- "Unk/Uns" is one string and "NA" is another
+
+-- deleted: choose one patientsid for each type of odd stageGroupingAJCC
+
+select top 200 t.TIUDocumentSID, t.sta3n, t.TIUDocumentDefinitionSID, patientsid, EpisodeBeginDateTime, DocumentSubject,
+	d.TIUDocumentDefinition
+ from ORD_Singh_202001030D.[Src].[TIU_TIUDocument] as t
+ inner join cdwwork.dim.TIUDocumentDefinition as d
+ on t.TIUDocumentDefinitionSID = d.TIUDocumentDefinitionSID
+ -- no reportText??
+
+select * from ORD_Singh_202001030D.INFORMATION_SCHEMA.COLUMNS
+where   COLUMN_NAME like 'reporttext%'
+-- ah ha! See STIUNotes_TIUDocument_8925 and SPatientText_RadiologyReportText
+
+select top 200 t.TIUDocumentSID, t.sta3n, t.TIUDocumentDefinitionSID, patientsid, EpisodeBeginDateTime, DocumentSubject,reporttext,
+	d.TIUDocumentDefinition
+from ORD_Singh_202001030D.[Src].STIUNotes_TIUDocument_8925 as t
+inner join cdwwork.dim.TIUDocumentDefinition as d
+ on t.TIUDocumentDefinitionSID = d.TIUDocumentDefinitionSID
+ -- deleted : select by patientsid
+
+ /*nursing onc for patient  "NA"
+  **** recurrent lung adenoca
+
+  patient  "NULL"
+ **** dx 2018 IIIA recur 2019 met
+   */
+
+ select  t.TIUDocumentDefinitionSID, patientsid, EpisodeBeginDateTime, reporttext,
+	d.TIUDocumentDefinition
+from ORD_Singh_202001030D.[Src].STIUNotes_TIUDocument_8925 as t
+inner join cdwwork.dim.TIUDocumentDefinition as d
+ on t.TIUDocumentDefinitionSID = d.TIUDocumentDefinitionSID
+ where PatientSID in (000000) -- deleted : select by patientsid
+ order by t.EpisodeBeginDateTime
+ 
+ /*Unk/Uns
+ 
+ new fdg avid rll r hilar lung lesions. pet ct non va but ordered by va. preceded by ct chest.
+
+ct evidently done for inc cough sputum h/o copd c/f pna
+*/
