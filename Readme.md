@@ -7,4 +7,7 @@ Cancer e-Measure
 
 This repository so far focuses only on the **advanced stage** e-measure, for lung and colon cancer.
 
-You probably want the file `simple-early-late.sql`
+Skim this file first
+========
+
+You probably want the file `simple-early-late.sql`. Click on it in the file list above.
