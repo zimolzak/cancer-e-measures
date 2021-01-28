@@ -607,3 +607,112 @@ inner join cdwwork.dim.TIUDocumentDefinition as d
 
 ct evidently done for inc cough sputum h/o copd c/f pna
 */
+
+
+
+
+
+
+/******** Assess stability of measures 2020-01-28 ********/
+
+SELECT  sta3n, Stagegroupingajcc, count(*) as  n
+FROM [ORD_Singh_202001030D].[Src].[Oncology_Oncology_Primary_165_5]
+		where (SitegpX like 'lung%' or ICDOSite like 'lung%' or PrimarysiteX like 'lung%')
+		and not HistologyIcdo3X like 'small%' and not HistologyIcdo3X  like 'carcinoid%' and not HistologyIcdo3X  like 'neuro%'	
+		group by sta3n, Stagegroupingajcc
+	order by sta3n, StageGroupingajcc
+
+-- 876 rows
+
+
+select sta3n, StageGroupingajcc, count(*) as n
+  FROM [ORD_Singh_202001030D].[Src].[Oncology_Oncology_Primary_165_5]
+  where (SitegpX like 'colo%' or ICDOSite like 'colo%' or PrimarysiteX like 'colo%')
+  and not (Histologyicdo3X like '%carcinoid%' or 
+  Histologyicdo3X like '%neuro%' or 
+  Histologyicdo3X like '%adenoma%' or 
+  Histologyicdo3X like '%lymph%' or 
+  Histologyicdo3X like 'gastrointestinal strom%' or
+  Histologyicdo3X like '%sarcoma%')
+group by sta3n, StageGroupingajcc
+order by sta3n, StageGroupingajcc
+
+--845 rows
+
+
+
+
+
+
+/******** development review chart pull for preeti ********/
+
+select count(*) 
+FROM [ORD_Singh_202001030D].[Src].[Oncology_Oncology_Primary_165_5] 
+  where (SitegpX like 'lung%' or ICDOSite like 'lung%' or PrimarysiteX like 'lung%')
+	and not HistologyIcdo3X like 'small%' and not HistologyIcdo3X  like 'carcinoid%' and not HistologyIcdo3X  like 'neuro%'
+--67923 Lung
+
+select * from (
+SELECT 
+onc.[PatientSID],onc.[Sta3n],onc.[Stagegroupclinical] , onc.[StageGroupingajcc] , onc.[SitegpX], onc.[ICDOSite], onc.[PrimarysiteX], onc.[Histologyicdo3X]
+      , onc.[DateDX],onc.[Histologyicdo2X],onc.[SeerSummaryStage2000]
+	  , spat.PatientName, spat.PatientSSN, spat.BirthDateTime
+	  , ROW_NUMBER() over (order by onc.patientsid) as patientsid_rank
+  FROM [ORD_Singh_202001030D].[Src].[Oncology_Oncology_Primary_165_5] as onc
+  left join ORD_Singh_202001030D.src.SPatient_SPatient as spat
+  on onc.PatientSID = spat.PatientSID
+  where (SitegpX like 'lung%' or ICDOSite like 'lung%' or PrimarysiteX like 'lung%')
+	and not HistologyIcdo3X like 'small%' and not HistologyIcdo3X  like 'carcinoid%' and not HistologyIcdo3X  like 'neuro%'
+) as x
+where patientsid_rank = 31510 --these came from random.org and are not identifiers
+or patientsid_rank = 47181
+or patientsid_rank = 4020
+or patientsid_rank = 65617
+or patientsid_rank = 29199
+or patientsid_rank = 54735
+or patientsid_rank = 44681
+or patientsid_rank = 26228
+or patientsid_rank = 12608
+or patientsid_rank = 13719
+
+
+
+
+select count(*)
+  FROM [ORD_Singh_202001030D].[Src].[Oncology_Oncology_Primary_165_5] as onc
+  where (SitegpX like 'colo%' or ICDOSite like 'colo%' or PrimarysiteX like 'colo%')
+  and not (Histologyicdo3X like '%carcinoid%' or 
+  Histologyicdo3X like '%neuro%' or 
+  Histologyicdo3X like '%adenoma%' or 
+  Histologyicdo3X like '%lymph%' or 
+  Histologyicdo3X like 'gastrointestinal strom%' or
+  Histologyicdo3X like '%sarcoma%')
+--29878 colon
+
+select * from (
+select
+onc.[PatientSID],onc.[Sta3n],onc.[Stagegroupclinical] , onc.[StageGroupingajcc] , onc.[SitegpX], onc.[ICDOSite], onc.[PrimarysiteX], onc.[Histologyicdo3X]
+      , onc.[DateDX],onc.[Histologyicdo2X],onc.[SeerSummaryStage2000]
+	  , spat.PatientName, spat.PatientSSN, spat.BirthDateTime
+	  , ROW_NUMBER() over (order by onc.patientsid) as patientsid_rank
+  FROM [ORD_Singh_202001030D].[Src].[Oncology_Oncology_Primary_165_5] as onc
+  left join ORD_Singh_202001030D.src.SPatient_SPatient as spat
+  on onc.PatientSID = spat.PatientSID
+  where (SitegpX like 'colo%' or ICDOSite like 'colo%' or PrimarysiteX like 'colo%')
+  and not (Histologyicdo3X like '%carcinoid%' or 
+  Histologyicdo3X like '%neuro%' or 
+  Histologyicdo3X like '%adenoma%' or 
+  Histologyicdo3X like '%lymph%' or 
+  Histologyicdo3X like 'gastrointestinal strom%' or
+  Histologyicdo3X like '%sarcoma%')
+) as x
+where patientsid_rank = 19667 --these came from random.org and are not identifiers
+or patientsid_rank = 6109
+or patientsid_rank = 19502
+or patientsid_rank = 16965
+or patientsid_rank = 13910
+or patientsid_rank = 26319
+or patientsid_rank = 24578
+or patientsid_rank = 10772
+or patientsid_rank = 9758
+or patientsid_rank = 20058
