@@ -12,13 +12,13 @@ lung  = read.csv(here("ajz-lung-stg-sta3n.csv"), header=FALSE, col.names=c('stat
 
 colon %>%
 mutate_at(vars(station, stage), ~ as.factor(.)) %>%
-pivot_wider(names_from = stage, values_from = count) %>%
+pivot_wider(names_from = stage, values_from = count, values_fill = 0) %>%
 mutate(early =`0` + I + II, late=III +IV, total = early+late, measure = late / (early+late))->
 colon_tidy
 
 lung %>%
 mutate_at(vars(station, stage), ~ as.factor(.)) %>%
-pivot_wider(names_from = stage, values_from = count) %>%
+pivot_wider(names_from = stage, values_from = count, values_fill = 0) %>%
 mutate(early =`0` + I + II, late=III +IV, total = early+late,  measure = late / (early+late))->
 lung_tidy
 
@@ -31,15 +31,13 @@ qplot(lung_tidy$measure) + labs(title='Distribution of lung late/total measure b
 colon_tidy %>%
 pivot_longer(cols = early:late, names_to = 'stage', values_to = 'count') %>%
 select(station, stage, count, total) %>%
-mutate(sta_reo = fct_reorder(station, total, .desc=TRUE)) %>%
-filter(!is.na(total))->
+mutate(sta_reo = fct_reorder(station, total, .desc=TRUE)) ->
 colon_el
 
 lung_tidy %>%
 pivot_longer(cols = early:late, names_to = 'stage', values_to = 'count') %>%
 select(station, stage, count, total) %>%
-mutate(sta_reo = fct_reorder(station, total, .desc=TRUE)) %>%
-filter(!is.na(total))->
+mutate(sta_reo = fct_reorder(station, total, .desc=TRUE)) ->
 lung_el
 
 ggplot(colon_el, aes(sta_reo, count)) + geom_col(aes(fill=stage)) + labs(title='Colon early and late, by VAMC', x='VA medical center')
