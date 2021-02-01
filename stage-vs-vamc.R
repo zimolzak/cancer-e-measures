@@ -25,6 +25,9 @@ lung_tidy
 qplot(colon_tidy$measure) + labs(title='Distribution of colon late/total measure by VAMC', x='Measure', y='Count') + xlim(0,1)
 qplot(lung_tidy$measure) + labs(title='Distribution of lung late/total measure by VAMC', x='Measure', y='Count') + xlim(0,1)
 
+write.csv(colon_tidy, here("colon-tidy.csv"))
+write.csv(lung_tidy, here("lung-tidy.csv"))
+
 
 #### plot volume and stage by station
 
