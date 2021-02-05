@@ -65,3 +65,18 @@ qplot(colon_tidy$proportion_missing, colon_tidy$missing_is_late_meas) + labs(tit
 qplot(lung_tidy$proportion_missing, lung_tidy $measure) + labs(title='Complete-case lung cancer measure', x = 'Proportion of all tumors which have missing stage', y='Late stage proportion') + geom_smooth() + ylim(0,1) + xlim(0,1)
 
 qplot(lung_tidy$proportion_missing, lung_tidy $missing_is_late_meas) + labs(title='Missing-is-late lung cancer measure', x = 'Proportion of all tumors which have missing stage', y='Late stage proportion') + geom_smooth() + ylim(0,1) + xlim(0,1)
+
+
+
+
+#### re-create
+
+colon_el %>%
+select(station, stage, count, sta_reo) %>%
+mutate(lateness = case_when(stage=='early' ~ 0, stage=='late' ~ 1)) %>%
+uncount(weights = count) ->
+colon_uncounted
+
+col_model = aov(lateness ~ station, data=colon_uncounted)
+summary(col_model)
+plot(col_model)
