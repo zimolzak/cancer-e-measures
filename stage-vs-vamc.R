@@ -74,18 +74,7 @@ qplot(lung_tidy$proportion_missing, lung_tidy $missing_is_late_meas) + labs(titl
 
 
 
-colon2 = read.csv(here("sta3n-stage-year-colon.tsv"), header=TRUE, sep = "\t", stringsAsFactors=FALSE)
 lung2  = read.csv(here("sta3n-stage-year-lung.tsv"),  header=TRUE, sep = "\t", stringsAsFactors=FALSE)
-
-colon2 %>%
-mutate(station = as.factor(sta3n), stage = as.factor(stagegroupingajcc), year = as.numeric(yeardx)) %>%
-rename(count = n) %>%
-select(station, stage, count, year) %>%
-pivot_wider(names_from = stage, values_from = count, values_fill = 0) %>%
-mutate(early=`0`+I+II, late=III+IV, total=early+late, measure = late / (early+late)) %>%
-mutate(tot_missing = `NULL` + `NA` + `Unk/Uns`, proportion_missing = tot_missing / (total + tot_missing) ) %>%
-mutate(missing_is_late_meas = (late + tot_missing) / (total + tot_missing)) ->
-colon2_tidy
 
 lung2 %>%
 mutate(station = as.factor(sta3n), stage = as.factor(stagegroupingajcc), year = as.numeric(yeardx)) %>%
