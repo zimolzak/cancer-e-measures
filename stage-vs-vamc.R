@@ -104,4 +104,8 @@ lung_by_year
 
 ggplot(lung_by_year, aes(year, grand_tot)) + geom_col() + labs(title='Lung cancer cases by year')
 
-head(lung2_tidy)
+big_facet_theme =   theme(panel.background = element_rect(fill = "white"), axis.text = element_text(size=rel(0.5)), strip.text = element_text(size=rel(0.5)), axis.text.x = element_text(color="white"), axis.ticks.x = element_line(color="white"))
+
+ggplot(lung2_tidy, aes(year, total)) + geom_col() + facet_wrap(vars(station)) + big_facet_theme + scale_y_continuous(breaks=c(0,250)) + labs(title='Lung cancer cases by station by year, 2000-2020', y='') + xlim(2000,2020)
+
+ggplot(lung2_tidy, aes(year, measure)) + geom_line() + facet_wrap(vars(station)) + big_facet_theme + xlim(2010,2020) + labs(title="Lung stage measure, 2010-2020", y='')
