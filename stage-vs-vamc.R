@@ -65,3 +65,43 @@ qplot(colon_tidy$proportion_missing, colon_tidy$missing_is_late_meas) + labs(tit
 qplot(lung_tidy$proportion_missing, lung_tidy $measure) + labs(title='Complete-case lung cancer measure', x = 'Proportion of all tumors which have missing stage', y='Late stage proportion') + geom_smooth() + ylim(0,1) + xlim(0,1)
 
 qplot(lung_tidy$proportion_missing, lung_tidy $missing_is_late_meas) + labs(title='Missing-is-late lung cancer measure', x = 'Proportion of all tumors which have missing stage', y='Late stage proportion') + geom_smooth() + ylim(0,1) + xlim(0,1)
+
+
+
+
+####################
+
+
+
+
+colon2 = read.csv(here("sta3n-stage-year-colon.tsv"), header=TRUE, sep = "\t", stringsAsFactors=FALSE)
+lung2  = read.csv(here("sta3n-stage-year-lung.tsv"),  header=TRUE, sep = "\t", stringsAsFactors=FALSE)
+
+colon2 %>%
+mutate(station = as.factor(sta3n), stage = as.factor(stagegroupingajcc), year = as.numeric(yeardx)) %>%
+rename(count = n) %>%
+select(station, stage, count, year) %>%
+pivot_wider(names_from = stage, values_from = count, values_fill = 0) %>%
+mutate(early=`0`+I+II, late=III+IV, total=early+late, measure = late / (early+late)) %>%
+mutate(tot_missing = `NULL` + `NA` + `Unk/Uns`, proportion_missing = tot_missing / (total + tot_missing) ) %>%
+mutate(missing_is_late_meas = (late + tot_missing) / (total + tot_missing)) ->
+colon2_tidy
+
+lung2 %>%
+mutate(station = as.factor(sta3n), stage = as.factor(stagegroupingajcc), year = as.numeric(yeardx)) %>%
+rename(count = n) %>%
+select(station, stage, count, year) %>%
+pivot_wider(names_from = stage, values_from = count, values_fill = 0) %>%
+mutate(early=`0`+I+II, late=III+IV, total=early+late, measure = late / (early+late)) %>%
+mutate(tot_missing = `NULL` + `NA` + `Unk/Uns`, proportion_missing = tot_missing / (total + tot_missing) ) %>%
+mutate(missing_is_late_meas = (late + tot_missing) / (total + tot_missing)) ->
+lung2_tidy
+
+lung2_tidy %>%
+group_by(year) %>%
+summarise(grand_tot = sum(total)) ->
+lung_by_year
+
+ggplot(lung_by_year, aes(year, grand_tot)) + geom_col() + labs(title='Lung cancer cases by year')
+
+head(lung2_tidy)
