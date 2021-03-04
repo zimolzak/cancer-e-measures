@@ -94,13 +94,32 @@ select(station, stage, count, year) %>%
 pivot_wider(names_from = stage, values_from = count, values_fill = 0) %>%
 mutate(early=`0`+I+II, late=III+IV, total=early+late, measure = late / (early+late)) %>%
 mutate(tot_missing = `NULL` + `NA` + `Unk/Uns`, proportion_missing = tot_missing / (total + tot_missing) ) %>%
-mutate(missing_is_late_meas = (late + tot_missing) / (total + tot_missing)) ->
+select(-`NULL`, -`NA`, -`Unk/Uns`, -I, -II, -III, -IV, -`0`) ->
 lung2_tidy
+
+lung2_tidy %>%
+select(station, year, total, measure) %>%
+group_by(station) %>%
+summarise(s = sum(total)) ->
+sum_by_station
+
+sum_by_station %>%
+summarise(m = median(s)) ->
+med
+
+MEDIAN_VOLUME = med$m
+
+lung2_tidy %>%
+inner_join(sum_by_station) %>%
+filter(s >= MEDIAN_VOLUME, year >= 2010) ->
+lung2_hivol
 
 lung2_tidy %>%
 group_by(year) %>%
 summarise(grand_tot = sum(total)) ->
 lung_by_year
+
+#### plots
 
 ggplot(lung_by_year, aes(year, grand_tot)) + geom_col() + labs(title='Lung cancer cases by year')
 
@@ -108,4 +127,8 @@ big_facet_theme =   theme(panel.background = element_rect(fill = "white"), axis.
 
 ggplot(lung2_tidy, aes(year, total)) + geom_col() + facet_wrap(vars(station)) + big_facet_theme + scale_y_continuous(breaks=c(0,250)) + labs(title='Lung cancer cases by station by year, 2000-2020', y='') + xlim(2000,2020)
 
-ggplot(lung2_tidy, aes(year, measure)) + geom_line() + facet_wrap(vars(station)) + big_facet_theme + xlim(2010,2020) + labs(title="Lung stage measure, 2010-2020", y='')
+# ggplot(lung2_tidy, aes(year, measure)) + geom_line() + facet_wrap(vars(station)) + big_facet_theme + xlim(2010,2020) + labs(title="Lung stage measure, 2010-2020", y='')
+
+ggplot(lung2_hivol, aes(year, measure)) + geom_hline(yintercept = 0.5, color="gray70") + geom_line() + facet_wrap(vars(station)) + big_facet_theme + xlim(2010,2020) + labs(title="Lung stage measure, 2010-2020, busiest stations", y='')
+
+ggplot(lung2_hivol, aes(year, measure, color=station)) + geom_line() + xlim(2010,2020) + labs(title="Lung stage measure, 2010-2020, busiest stations") + theme(legend.position="none")
