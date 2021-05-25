@@ -8,6 +8,8 @@ colon = read.csv(here("ajz-colon-stg-sta3n.csv"), header=FALSE, col.names=c('sta
 lung  = read.csv(here("ajz-lung-stg-sta3n.csv"), header=FALSE, col.names=c('station', 'stage', 'count'))
 
 
+
+
 #### calculate the measure, plot simple distribution
 
 colon %>%
@@ -29,8 +31,15 @@ lung_tidy
 qplot(colon_tidy$measure) + labs(title='Distribution of colon late/total measure by VAMC', x='Measure', y='Count') + xlim(0,1)
 qplot(lung_tidy$measure) + labs(title='Distribution of lung late/total measure by VAMC', x='Measure', y='Count') + xlim(0,1)
 
+cat('Colorectal stage measure by VAMC\n')
+quantile(colon_tidy$measure, probs = c(0, 0.05, 0.25, 0.5, 0.75, 0.95, 1), na.rm=TRUE)
+cat('\n\nLung stage measure by VAMC\n')
+quantile(lung_tidy$measure, probs = c(0, 0.05, 0.25, 0.5, 0.75, 0.95, 1), na.rm=TRUE)
+
 write.csv(colon_tidy, here("colon-tidy.csv"))
 write.csv(lung_tidy, here("lung-tidy.csv"))
+
+
 
 
 #### plot volume and stage by station
@@ -49,7 +58,6 @@ lung_el
 
 ggplot(colon_el, aes(sta_reo, count)) + geom_col(aes(fill=stage)) + labs(title='Colon early and late, by VAMC', x='VA medical center')
 ggplot(lung_el, aes(sta_reo, count)) + geom_col(aes(fill=stage)) + labs(title='Lung early and late, by VAMC', x='VA medical center')
-
 
 # Two more plots starting to think about large/small VAs
 
@@ -70,9 +78,6 @@ qplot(lung_tidy$proportion_missing, lung_tidy $missing_is_late_meas) + labs(titl
 
 
 ####################
-
-
-
 
 lung2  = read.csv(here("sta3n-stage-year-lung.tsv"),  header=TRUE, sep = "\t", stringsAsFactors=FALSE)
 
@@ -107,6 +112,8 @@ lung2_tidy %>%
 group_by(year) %>%
 summarise(grand_tot = sum(total)) ->
 lung_by_year
+
+
 
 #### plots
 
