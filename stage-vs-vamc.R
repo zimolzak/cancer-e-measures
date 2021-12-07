@@ -41,7 +41,7 @@ lung_tidy %>%
 select(`NULL`, `0`, I, II, III, IV, `Unk/Uns`, early, late, total, tot_missing) %>%
 summarise_all(sum)
 
-cat('Colorectal stage measure by VAMC\n')
+cat('\n\nColorectal stage measure by VAMC\n')
 quantile(colon_tidy$measure, probs = c(0, 0.05, 0.25, 0.5, 0.75, 0.95, 1), na.rm=TRUE)
 cat('\n\nLung stage measure by VAMC\n')
 quantile(lung_tidy$measure, probs = c(0, 0.05, 0.25, 0.5, 0.75, 0.95, 1), na.rm=TRUE)
@@ -122,6 +122,14 @@ lung2_tidy %>%
 group_by(year) %>%
 summarise(grand_tot = sum(total)) ->
 lung_by_year
+
+cat('\n\nTotal cases sta3n-stage-year-lung.tsv')
+lung2_tidy %>%
+select(early, late, total, tot_missing) %>%
+summarise_all(sum)
+
+# FIXME - need to implement all the above for colon2 as well.
+
 
 
 
