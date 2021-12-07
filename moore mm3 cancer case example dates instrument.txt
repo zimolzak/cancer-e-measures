@@ -1,0 +1,74 @@
+# Questions for Moore Measure 3 (Late Stage) Chart Review
+
+2021-12-07
+
+Here is a hypothetical case to illustrate unclear parts of the chart
+review process.
+
+
+
+
+## Early phase of diagnostic process
+
+- Patient never had low dose chest CT for screening for lung cancer,
+  even though he qualified. Therefore, **yes to MOD** in general.
+
+- Presents with cough March 1. This is date of "cancer signal
+  recorded" (**date_signal**).
+
+- PCP orders CXR same day, March 1.
+
+- CXR completed same day, March 1. Some abnormal but nonspecific
+  findings.
+
+- PCP orders f/u CT March 3 (**date_initiate**, but see below). No MOD
+  for this interval because < 7 days.
+
+- CT is completed April 3 (**date_complete**). Likewise no MOD because
+  30 days < 60 days.
+
+
+
+
+## Late phase of diagnostic process
+
+- Evidence of MD reviewing CT result April 7.
+
+- MD orders PET, per CT recommendations, on April 8.
+
+- PET is performed August 8.
+
+- Result review (of PET) documented on Aug 10
+
+- Consult for interventional radiology (or pulmonology or thoracic
+  surg or "chest medicine") ordered on Aug 12.
+
+- Biopsy complete, by whatever means, or patient sometimes diagnosed
+without biopsy, and diagnosis is *formally* made (**date_dx**). Often
+pre-populated by registry. **date_complete** to **date_dx** measures
+the "late stage" process (from CT to diagnosis in this example).
+**date_signal** to **date_dx** measures the whole diagnostic process.
+
+Chart review ends (hard stop) at date of diagnosis, **date_dx**. No
+need to evaluate delays in certain parts of cancer treatment, imaging
+studies obtained to evaluate response to treatment, etc.
+
+
+
+
+## Concerns, comments, questions
+
+1. Should the date of CXR ordering be the date of "cancer-related
+diagnostic evaluation" (**date_initiate**)? Because CXR is somewhat
+nonspecific. Or should the date of CT ordering be this date, because
+it is more specific than CXR?
+
+2. The events in the "late phase" are somewhat undefined. Is this
+okay? One primary example but not the only one: How many days are
+acceptable from PET ordering to PET performed? Do we need to establish
+a specific number of days for this interval (reference value for PET
+ordering)? In this case, should the 4 months it took to perform PET
+the reviewer check "yes to MOD?"
+
+3. If the late phase obviously proceeds promptly (say 30 days) is it
+necessary to do detailed chart review of this phase?
