@@ -3,3 +3,6 @@
 *.csv
 *.pdf
 *.tsv
+*.docx
+.Rapp.history
+Routputs.txt
