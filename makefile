@@ -1,4 +1,7 @@
-all: Rplots.pdf mm3-questions.docx
+all: Rplots.pdf mm3-questions.docx workflow.pdf
+
+workflow.pdf: workflow.dot
+	dot -Tpdf $< > $@
 
 mm3-questions.docx: mm3-questions.txt
 	pandoc -o $@ $<

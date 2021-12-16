@@ -1,0 +1,26 @@
+digraph{
+
+docx[label="Edit MS\nWord instrument"]
+accdb[label="Edit\nMS Access DB"]
+vinci[label="Upload to\nVINCI" shape="rectangle"]
+freed[label="Upload to\nFreedcamp" shape="rectangle"]
+REDCap [label="Edit\nREDCap" shape="rectangle"]
+a1[label="Andy" shape="rectangle"]
+SQL[shape="rectangle"]
+pseudocode[shape="rectangle"]
+
+SQL -> docx
+docx -> SQL
+
+pseudocode -> SQL
+SQL -> pseudocode
+
+a1 -> docx -> email
+
+email -> Alexis -> freed
+email -> Viral -> accdb -> Andy -> vinci
+email -> Saritha -> REDCap
+
+docx -> vinci
+
+}
